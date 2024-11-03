@@ -1,0 +1,39 @@
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        for n2, num2 in enumerate(nums2):
+            start = 0
+            flag = False
+            for n1 in range(start, m + n):
+                if flag:
+                    break
+
+                if num2 > nums1[n1] and nums1[n1] != 0:
+                    continue
+                # insert
+                else:
+                    flag = True
+                    if nums1[n1] == 0:
+                        print(
+                            "n1 {}: num1 {}, n2 {}: num2 {}".format(
+                                n1, nums1[n1], n2, num2
+                            )
+                        )
+                        for i in range(n1 + 1, m + n):
+                            nums1[m + n - i + 1] = nums1[m + n - i]
+                        nums1[n1] = num2
+                        start = n1
+                        print("After inset, nums1:", nums1)
+                    else:
+                        print(
+                            "n1 {}: num1 {}, n2 {}: num2 {}".format(
+                                n1, nums1[n1], n2, num2
+                            )
+                        )
+                        for i in range(n1 + 1, m + n):
+                            nums1[m + n - i] = nums1[m + n - i - 1]
+                        nums1[n1] = num2
+                        start = n1
+                        print("After inset, nums1:", nums1)
