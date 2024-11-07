@@ -1,3 +1,4 @@
+#方法一：先排序（冒泡排序）
 class Solution:
     def hIndex(self, citations: List[int]) -> int:
         n = len(citations)
@@ -19,3 +20,63 @@ class Solution:
                 else:
                     h = h+1
         return h
+
+#方法二：先排序（快排）
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        h = 0      
+        self.quickSort(citations,0,n-1)
+        for i in range(n):
+            if(citations[i]> 0):
+                if(citations[i] <= i+1):
+                    h = max(citations[i],h)
+                else:
+                    h = h+1
+        return h
+        
+    def partition(self, arr: List[int], low: int, high: int) -> int:
+        i = low                                       # 最小元素索引
+        pivot = arr[high]                             # 最后一个元素，我们把列表中的所有元素同它比较
+
+        for j in range(low, high):                    #从第一个索引到倒数第二个索引
+            if arr[j] >= pivot:                       #从第一个元素到倒数第二个元素依次判断是否≤最后一个元素
+                arr[i], arr[j] = arr[j], arr[i]       #≤最后一个元素的所有元素依次放在左边索引0~i的位置
+                i = i + 1
+        arr[i], arr[high] = arr[high], arr[i]         #然后将最后一个元素放在索引i的位置，实现：该元素左边的都比它小，右边的都比它大的排序
+        return i                                    #返回该元素的索引位置
+
+    ## 快速排序函数
+    def quickSort(self, arr: List[int], low: int, high: int) -> None:
+        if low < high:                                #如果列表有1个以上的元素
+            pi = self.partition(arr, low, high)            #获取左小右大函数中的 被比较数所在的索引
+            self.quickSort(arr, low, pi - 1)            #反复循环，左排序
+            self.quickSort(arr, pi + 1, high)           #反复循环，右排序
+
+#方法三：调用函数库排序
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        sorted_citation = sorted(citations, reverse = True)
+        h = 0; i = 0; n = len(citations)
+        while i < n and sorted_citation[i] > h:
+            h += 1
+            i += 1
+        return h
+
+#方法四：计数排序，算法复杂度O(n)
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations); tot = 0
+        counter = [0] * (n+1) #h 因子不可能超过发表文章数量n
+        for c in citations:
+            if c >= n:
+                counter[n] += 1 #记录引用次数大于等于n的文章数量
+            else:
+                counter[c] += 1 #记录引用次数为c的发表文章数量
+        for i in range(n, -1, -1): #从后往前遍历计数数组，累计引用次数大于等于i的发表文章数量
+            tot += counter[i]
+            if tot >= i: #一旦发现累计文章（引用次数大于等于i）数量大于等于i，返回i既为h因子
+                return i
+        return 0
+
+        
