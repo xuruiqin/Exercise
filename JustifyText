@@ -1,0 +1,66 @@
+'''
+示例 2:
+
+输入:words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+输出:
+[
+  "What   must   be",
+  "acknowledgment  ",
+  "shall be        "
+]
+解释: 注意最后一行的格式应为 "shall be    " 而不是 "shall     be",
+     因为最后一行应为左对齐，而不是左右两端对齐。       
+     第二行同样为左对齐，这是因为这行只包含一个单词。
+'''
+
+class Solution:
+    def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
+        n = len(words)
+        newWords = []
+        newWord = []
+        curLen = 0
+        i = 0
+        while i < n:
+            curLen += len(words[i])
+            if(curLen <= maxWidth):
+                curLen += 1
+                newWord.append(words[i])
+                i += 1
+            else:
+                newWords.append(newWord)
+                newWord = []
+                curLen = 0
+        newWords.append(newWord)
+        
+        for newWord in newWords[:-1]:
+            total = 0
+            cnt = len(newWord)
+            for element in newWord:
+                total += len(element)
+            if(cnt > 1):
+                space = (maxWidth-total)//(cnt-1)
+                rest_space = (maxWidth-total)%(cnt-1)
+                #print(newWord, maxWidth,total, space, rest_space)
+                for i in range(cnt-1):
+                    newWord[i] = newWord[i] + ' '*space
+                    if(rest_space):
+                        newWord[i] = newWord[i] + ' '
+                        rest_space -= 1
+            else:
+                space = maxWidth -total
+                newWord[0] = newWord[0] + ' '*space
+
+        total = 0
+        cnt = len(newWords[-1])
+        if(cnt>1):
+            for i in range(cnt-1):
+                newWords[-1][i] = newWords[-1][i] + ' '
+                total += (len(newWords[-1][i]))
+            total += len(newWords[-1][-1])
+            #print(newWords[-1][-1], maxWidth - total)
+            newWords[-1][-1] = newWords[-1][-1] + ' '*(maxWidth - total)
+        elif(cnt == 1):
+            newWords[-1][0] = newWords[-1][0] + ' '*(maxWidth -len(newWords[-1][0]))
+
+        return ["".join(_) for _ in newWords]
+            
