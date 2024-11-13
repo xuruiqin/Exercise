@@ -1,0 +1,54 @@
+#方法一
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        n = len(s)
+        word = ''
+        new_s = ''
+        for i, c in enumerate(s):
+            if(c == ' '):
+                #加上上一次循环得到的单词
+                if(word != ''):
+                    if(new_s == ''):
+                        new_s = word
+                    else:
+                        new_s = word + ' ' + new_s
+                word = ''
+            else:
+                word = word + c
+        #加上最后一个非空单词
+        if(word != ''):
+            if(new_s == ''):
+                new_s = word
+            else:
+                new_s = word + ' ' + new_s
+
+        return new_s
+
+#方法二：双端队列
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        left, right = 0, len(s) - 1
+        # 去掉字符串开头的空白字符
+        while left <= right and s[left] == ' ':
+            left += 1
+        
+        # 去掉字符串末尾的空白字符
+        while left <= right and s[right] == ' ':
+            right -= 1
+            
+        d, word = collections.deque(), []
+        # 将单词 push 到队列的头部
+        while left <= right:
+            if s[left] == ' ' and word:
+                d.appendleft(''.join(word))
+                word = []
+            elif s[left] != ' ':
+                word.append(s[left])
+            left += 1
+        d.appendleft(''.join(word))
+        
+        return ' '.join(d)
+
+作者：力扣官方题解
+链接：https://leetcode.cn/problems/reverse-words-in-a-string/solutions/194450/fan-zhuan-zi-fu-chuan-li-de-dan-ci-by-leetcode-sol/
+来源：力扣（LeetCode）
