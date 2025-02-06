@@ -1,0 +1,53 @@
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        # 统计字符串 t 中每个字符的出现频率
+        target = Counter(t)
+        # 窗口中需要包含的字符种类数
+        required = len(target)
+        # 左右指针，初始时都指向字符串 s 的开头
+        left, right = 0, 0
+        # 窗口中已经包含的字符种类数
+        formed = 0
+        # 用于记录窗口中每个字符的出现频率
+        window_counts = {}
+        # 最小子串的长度
+        min_len = len(s) + 1
+        # 最小子串的起始位置
+        min_left = 0
+
+        while right < len(s):
+            # 获取当前右指针指向的字符
+            character = s[right]
+            # 将该字符添加到窗口中
+            window_counts[character] = window_counts.get(character, 0) + 1
+
+            # 如果该字符在 t 中，并且窗口中该字符的出现频率等于 t 中该字符的出现频率
+            if character in target and window_counts[character] == target[character]:
+                formed += 1
+
+            # 当窗口中已经包含了 t 中的所有字符时，尝试缩小窗口
+            while left <= right and formed == required:
+                character = s[left]
+
+                # 更新最小子串的长度和起始位置
+                if right - left + 1 < min_len:
+                    min_len = right - left + 1
+                    min_left = left
+
+                # 移除窗口左侧的字符
+                window_counts[character] -= 1
+                # 如果移除的字符在 t 中，并且窗口中该字符的出现频率小于 t 中该字符的出现频率
+                if character in target and window_counts[character] < target[character]:
+                    formed -= 1
+
+                # 向右移动左指针，缩小窗口
+                left += 1
+
+            # 向右移动右指针，扩大窗口
+            right += 1
+
+        # 如果最小子串的长度仍然是无穷大，说明没有找到符合条件的子串，返回空字符串
+        return "" if min_len == len(s)+1 else s[min_left:min_left + min_len]
+
+
+  来源 https://leetcode.cn/problems/minimum-window-substring/description/?envType=study-plan-v2&envId=top-interview-150
