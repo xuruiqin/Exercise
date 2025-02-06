@@ -1,0 +1,63 @@
+from typing import List
+from collections import Counter
+
+class Solution:
+    def findSubstring(self, s: str, words: List[str]) -> List[int]:
+        # 用于存储最终找到的所有串联子串的起始索引
+        result = []
+        # wordNum 表示单词列表中单词的数量
+        # wordLen 表示每个单词的长度
+        # lenS 表示字符串 s 的长度
+        wordNum, wordLen, lenS = len(words), len(words[0]), len(s)
+
+        # 外层循环，以每个单词的长度 wordLen 为间隔进行遍历，遍历范围是一个单词长度内的所有可能起始位置
+        for i in range(wordLen):
+            # 如果从当前起始位置开始，后续不足以容纳 wordNum 个长度为 wordLen 的单词，直接跳出循环
+            if i + wordNum * wordLen > lenS:
+                break
+            # 初始化一个 Counter 对象，用于记录当前窗口内单词的出现频率与 words 列表中单词出现频率的差异
+            differ = Counter()
+
+            # 初始化第一个窗口内的单词频率差异
+            for j in range(wordNum):
+                # 从字符串 s 中截取当前窗口内的一个单词
+                word = s[i + j * wordLen: i + (j + 1) * wordLen]
+                # 将该单词在 differ 中的计数加 1，表示在当前窗口中该单词出现了一次
+                differ[word] += 1
+
+            # 减去 words 列表中每个单词的出现频率
+            for word in words:
+                # 将 words 列表中的单词在 differ 中的计数减 1
+                differ[word] -= 1
+                # 如果该单词的计数变为 0，说明在当前窗口内该单词的出现频率与 words 列表中相同，将其从 differ 中删除
+                if differ[word] == 0:
+                    del differ[word]
+
+            # 滑动窗口，从当前起始位置 i 开始，以 wordLen 为步长向后移动
+            for start in range(i, lenS - wordNum * wordLen + 1, wordLen):
+                # 如果不是第一个窗口（即 start 不等于 i），需要更新窗口内的单词频率差异
+                if start != i:
+                    # 窗口右移，添加新进入窗口的单词
+                    word = s[start + (wordNum - 1) * wordLen: start + wordNum * wordLen]
+                    # 将新进入窗口的单词在 differ 中的计数加 1
+                    differ[word] += 1
+                    # 如果该单词的计数变为 0，将其从 differ 中删除
+                    if differ[word] == 0:
+                        del differ[word]
+                    # 窗口左移，移除离开窗口的单词
+                    word = s[start - wordLen: start]
+                    # 将离开窗口的单词在 differ 中的计数减 1
+                    differ[word] -= 1
+                    # 如果该单词的计数变为 0，将其从 differ 中删除
+                    if differ[word] == 0:
+                        del differ[word]
+
+                # 如果 differ 为空，说明当前窗口内的单词组合与 words 列表中的单词组合完全相同
+                if len(differ) == 0:
+                    # 将当前窗口的起始索引添加到结果列表中
+                    result.append(start)
+
+        # 返回所有找到的串联子串的起始索引列表
+        return result
+
+转自 https://leetcode.cn/problems/substring-with-concatenation-of-all-words/solutions/3065201/chuan-lian-suo-you-dan-ci-de-zi-chuan-by-xlb9/
