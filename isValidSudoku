@@ -1,0 +1,60 @@
+有效数独
+解法一：
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        valid_char = '123456789'
+        
+        for i in range(9):
+            counter = Counter()
+            for j in range(9):
+                cur = board[i][j]
+                counter[cur] += 1
+                if( cur in valid_char and counter[cur] == 2):
+                    #print(board[i][j])
+                    return False
+        for i in range(9):
+            counter = Counter()
+            for j in range(9):
+                cur = board[j][i]
+                counter[cur] += 1
+                if( cur in valid_char and counter[cur] == 2):
+                    #print(board[i][j])
+                    return False
+        
+        for i in range(0,9,3):
+            for j in range(0,9,3):
+                counter = Counter()
+                for k in range(3):
+                    for l in range(3):
+                        cur = board[i+k][j+l]
+                        counter[cur] += 1
+                        if(cur in valid_char and counter[cur] == 2):
+                            #print(board[i+k][j+l])
+                            return False
+        
+        return True
+
+解法二：
+#import numpy as np
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        valid_char = '123456789'
+        rows = [[0 for _ in range(9)] for _ in range(9)]
+        columns = [[0 for _ in range(9)] for _ in range(9)]
+        subboxes = [[[0 for _ in range(9)] for _ in range(3)] for _ in range(3)]
+        #rows = np.empty((9,9),dtype=int)
+        #columns = np.empty((9,9),dtype=int)
+        #subboxes = np.empty((3,3,9),dtype=int)
+
+        for i in range(9):
+            for j in range(9):
+                cur = board[i][j]
+                if(cur != '.'):
+                    index = int(cur) -1
+                    rows[i][index] += 1
+                    columns[j][index] += 1
+                    subboxes[int(i/3)][int(j/3)][index] += 1
+                    if(rows[i][index] > 1 or columns[j][index] > 1 or subboxes[int(i/3)][int(j/3)][index] > 1):
+                        print(index)
+                        return False
+        return True
