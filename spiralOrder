@@ -1,0 +1,52 @@
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        row = len(matrix)
+        column = len(matrix[0])
+        out = []
+        if(row == 1):
+            return matrix[0]
+        if(column == 1):
+            for i in range(row):
+                out.append(matrix[i][0])
+            return out
+
+        ir = 0
+        ic = 0
+        count = 0      
+        ranges = {'r':column-1, 'd':row-1, 'l':0, 'u':0}
+        direction = 'r'
+
+        while (ir < row and ic < column and count < row*column):
+            #print(matrix[ir][ic])
+            out.append(matrix[ir][ic])
+            count += 1
+
+            if(direction == 'r'):
+                if(ic < ranges['r']):
+                    ic += 1
+                if(ic == ranges['r']):
+                    ranges['u'] += 1
+                    direction = 'd'
+            elif(direction == 'd'):
+                if(ir < ranges['d']):
+                    ir += 1
+                if(ir == ranges['d']):
+                    ranges['r'] -= 1
+                    direction = 'l'               
+            elif(direction == 'l'):
+                if(ic > ranges['l']):
+                    ic -= 1
+                if(ic == ranges['l']):
+                    ranges['d'] -= 1
+                    direction = 'u'
+            elif(direction == 'u'):
+                if(ir > ranges['u']):
+                    ir -= 1
+                if(ir == ranges['u']):
+                    ranges['l'] += 1
+                    direction = 'r'
+            #print(direction, ranges)
+
+        return out
+
+参考 https://leetcode.cn/problems/spiral-matrix/description/?envType=study-plan-v2&envId=top-interview-150
