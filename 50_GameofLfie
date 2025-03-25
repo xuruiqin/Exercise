@@ -1,0 +1,39 @@
+#方法一
+class Solution:
+    def gameOfLife(self, board: List[List[int]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        m = len(board)
+        n = len(board[0])
+        changes = []
+        for i in range(m):
+            for j in range(n):
+                alive = 0
+                #dead = 0
+                status = board[i][j]
+               #print('-----[',i,',',j,']',status,'-----')
+                arounds = [[i-1,j-1],[i-1,j],[i-1,j+1],[i,j-1],[i,j+1],[i+1,j-1],[i+1,j],[i+1,j+1]]
+                for around in arounds:
+                    if(around[0]>=0 and around[0]<m and around[1]>=0 and around[1]<n):
+                        if(board[around[0]][around[1]]):
+                            #print(around)
+                            alive += 1
+                        #else:
+                        #    dead += 1
+                #print('alive: ',alive)
+                if(status):
+                    if(alive < 2 or alive > 3):
+                        changes.append([i,j]) 
+                        #print([i,j],'+')
+                else:
+                    if(alive == 3):
+                        changes.append([i,j])
+                        #print([i,j],'-')
+
+        #print(board)
+        for change in changes:
+            if(board[change[0]][change[1]] == 0):
+                board[change[0]][change[1]] = 1
+            else:
+                board[change[0]][change[1]] = 0
