@@ -1,0 +1,19 @@
+class Solution:
+    def wordPattern(self, pattern: str, s: str) -> bool:
+        words = s.split()
+        if(len(pattern) != len(words)):
+            return False
+        
+        comp = {}
+        used = set()
+        for i in range(len(pattern)):
+            if(pattern[i] in comp):
+                if(words[i] != comp[pattern[i]]):
+                    return False
+            else:
+                if(words[i] in used):
+                    return False
+                comp[pattern[i]] = words[i]
+                used.add(words[i])
+
+        return True
