@@ -1,0 +1,20 @@
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        def bitSquareSum(m):
+            bitsum = 0
+            while(m>0):
+                bit = m % 10
+                bitsum += bit*bit
+                m = m // 10
+            return bitsum
+
+        slow = bitSquareSum(n)
+        fast = bitSquareSum(n)
+        fast = bitSquareSum(fast)
+
+        while(slow != fast):
+            slow = bitSquareSum(slow)
+            fast = bitSquareSum(fast)
+            fast = bitSquareSum(fast)
+            #print(slow, fast)
+        return slow == 1
