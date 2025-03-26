@@ -1,0 +1,23 @@
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        if(k==0):
+            return False
+        numlist = defaultdict(list)
+        n = len(nums)
+        for i in range(n):
+            numlist[nums[i]].append(i)
+        #print(numlist)
+        for key,v in numlist.items():
+            if(len(v) >= 2):
+               #if(k >= n):
+               #     return True
+                #new_v = sorted(v)
+                #print(v)
+                for j in range(len(v)-1):
+                    print(v[j+1],v[j])
+                    if(v[j+1] - v[j] <= k):
+                        return True
+        return False
+
+        
+        
