@@ -18,6 +18,15 @@ class Solution:
                     if(v[j+1] - v[j] <= k):
                         return True
         return False
+#解法二
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        positions = {}
+        for i, num in enumerate(nums):
+            if(num in positions and i-positions[num] <=k):
+                return True
+            positions[num] = i
 
+        return False
         
         
