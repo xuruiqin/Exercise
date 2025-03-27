@@ -1,0 +1,29 @@
+class Solution:
+    def summaryRanges(self, nums: List[int]) -> List[str]:
+        nums_set = set(nums)
+        series = []
+
+        if(len(nums) == 0):
+            return []
+        if(len(nums) == 1):
+            return [f"{nums[0]}"]
+
+        start = nums[0]
+        end = start
+        for num in nums[1:]:
+            if(num == end + 1):
+                end = num
+            else:
+                if(start != end):
+                    series.append(f"{start}->{end}")
+                else:
+                    series.append(f"{start}")
+                start = num
+                end = start
+        if(start != end):
+            series.append(f"{start}->{end}")
+        else:
+            series.append(f"{start}")
+
+        return series
+
