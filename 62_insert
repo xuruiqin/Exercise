@@ -16,7 +16,7 @@ class Solution:
             
             else:
                 left = min(left, li)
-                right = min(right, ri)
+                right = max(right, ri)
             
             if(not placed):
                 ans.append([left, right])
