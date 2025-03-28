@@ -1,0 +1,23 @@
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        operators = {"+","-","*","/"}
+        stack = list()
+
+        for s in tokens:
+            if(s not in operators):
+                stack.append(int(s))
+            else:
+                right = stack.pop()
+                left = stack.pop()
+                summ = 0
+                if(s == "+"):
+                    summ = left + right
+                elif(s == "-"):
+                    summ = left - right
+                elif(s == "*"):
+                    summ = left * right
+                else:
+                    summ = int(left/right)
+                stack.append(summ)
+
+        return stack.pop()
