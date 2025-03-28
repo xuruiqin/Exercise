@@ -1,0 +1,31 @@
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if(len(s)%2 == 1):
+            return False
+        braces = {'}':'{', ')':'(',']':'['}
+        #rest = []
+        rest = list()
+        for bra in s:
+            #if(bra in braces.values()):
+            #    rest.append(bra)
+            if(bra in braces.keys()):
+                if(not rest or rest[-1] != braces[bra]):
+                    return False
+                else:
+                    rest.pop()
+            else:
+                rest.append(bra)
+                #if(rest):
+                #    if(rest[-1] == braces[bra]):
+                #        rest = rest[:-1]
+                #    else:
+                #        #print(rest)
+                #        return False
+                #else:
+                #    return False
+            
+        #if(rest):
+            #return False
+        return not rest
+
+
