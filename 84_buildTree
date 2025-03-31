@@ -1,0 +1,32 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if(not preorder):
+            return None
+
+        root = TreeNode(preorder[0]) #构造根节点
+        stack = [root] #栈，储存只有左孩子的节点
+        index = 0 #指针，指向中序数组某个位置
+
+        for i in range(1,len(preorder)): #遍历前序数组
+            preorderVal = preorder[i]
+            node  = stack[-1] #栈顶节点
+            print('---------------',i,'preorder',preorderVal,'top',node.val,'inorder',inorder[index],'---------------')
+            if(node.val != inorder[index]):#栈顶节点的值不等于当前中序元素
+                node.left = TreeNode(preorderVal)#构建栈顶节点的左孩子
+                print(node.left.val,'left')
+                stack.append(node.left)#左孩子入栈
+            else:
+                while (stack and stack[-1].val == inorder[index]):#栈顶节点的值等于当前中序元素
+                    node = stack.pop() #出栈
+                    index += 1 #中序数组指针向后移动
+                node.right = TreeNode(preorderVal) #当前节点添加右孩子
+                print(node.right.val, 'right')
+                stack.append(node.right) #右孩子入栈
+
+        return root
