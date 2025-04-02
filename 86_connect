@@ -35,3 +35,41 @@ class Solution:
             self.nextStart = p
 
         self.last = p #更新当前层最后一个节点为p
+
+#方法二
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+"""
+
+class Solution:
+    def connect(self, root: 'Node') -> 'Node':
+        if(not root):
+            return None
+
+        queue = deque([root])
+
+        while(queue): #当前层不为空
+            n = len(queue) #获取当前层节点个数
+            last = None #当前层最后节点初始化为None
+            print('========================')
+            for _ in range(n): #依次取出当前层的n个节点
+                print('*******')
+                p = queue.popleft()
+                #queue.pop()
+                if(p.left): #当前层当前节点的左孩子入队列，构成下一层节点
+                    queue.append(p.left)
+                if(p.right): #当前层当前节点的左孩子入队列，构成下一层节点
+                    queue.append(p.right)
+                if(last): #如果当前层记录的当前最后节点不为空，则这个最后节点的next指向当前节点p
+                    last.next = p
+                    print(last.val, ':', p.val)
+                last = p #当前节点成为新的“最后的”节点
+                print('last:', p.val)
+
+        return root
