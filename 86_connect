@@ -1,0 +1,37 @@
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next: 'Node' = None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+"""
+
+class Solution:
+    def connect(self, root: 'Node') -> 'Node':
+        if(not root):
+            return None
+        
+        start = root #记录该层第一个节点
+        while(start): #当该层第一个节点不为空，说明还没有遍历完整棵树
+            self.last = None #记录该层最后一个节点
+            self.nextStart = None #记录下一次第一个节点
+            p = start #p从当前层第一个节点开始遍历
+            while(p):
+                if(p.left): #存在左孩子，则处理左孩子
+                    self.handle(p.left)
+                if(p.right): #存在右孩子，则处理右孩子
+                    self.handle(p.right)
+
+                p = p.next #移动至该层下一个节点
+            start = self.nextStart #当前层已遍历完，移动至下一层第一个节点
+        return root
+
+    def handle(self, p):
+        if(self.last): #如果当前层目前记录的最后一个节点不为空，则这个“最后的节点”的next应指向p
+            self.last.next = p
+        if(not self.nextStart): #如果当前层的第一个节点为空，则p成为当前层的第一个节点
+            self.nextStart = p
+
+        self.last = p #更新当前层最后一个节点为p
