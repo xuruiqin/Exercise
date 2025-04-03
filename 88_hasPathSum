@@ -1,0 +1,33 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        if(not root):
+            return False
+        if(not root.left and not root.right):
+            return root.val == targetSum
+
+        que_node = collections.deque([root]) #以广度优先搜索原则，记录走到当前节点
+        que_val = collections.deque([root.val]) #记录走到每个节点，所对应的求和
+
+        while (que_node):
+            now = que_node.popleft() #从队列去除当前节点
+            temp = que_val.popleft() #获取走到当前节点对于的求和
+            if(not now.left and not now.right): #如果走到叶节点，判断是否满足目标求和
+                if(temp == targetSum):
+                    return True 
+                continue #不满足，则继续寻找
+
+            if(now.left): #当前节点左孩子入队，并记录当前左孩子对应的路径求和
+                que_node.append(now.left)
+                que_val.append(now.left.val + temp)
+
+            if(now.right): #当前节点右孩子入队，并记录当前右孩子对应的路径求和
+                que_node.append(now.right)
+                que_val.append(now.right.val + temp)
+        
+        return False
