@@ -1,0 +1,28 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def __init__(self):
+        self.maxSum = float("-inf")
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        def maxGain(node: Optional[TreeNode]) -> int:
+            if(not node):
+                return 0
+            #if(not node.left and not node.right):
+            #    return max(node.val,0)
+
+            leftGain = max(maxGain(node.left), 0)
+            rightGain = max(maxGain(node.right), 0)
+
+            priceNewPath = node.val + leftGain + rightGain #考虑left->node->right的情况，此时不经过node的父节点
+
+            self.maxSum = max(self.maxSum, priceNewPath)
+
+            return node.val + max(leftGain, rightGain) #向node的父节点返回经过node的单边分支的最大路径和
+
+        
+        maxGain(root)
+        return self.maxSum
