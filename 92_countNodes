@@ -40,3 +40,50 @@ class Solution:
                 node_que.append(node.right)
 
         return count
+
+方法三：
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countNodes(self, root: Optional[TreeNode]) -> int:
+        if(not root):
+            return 0
+        if(not root.left and not root.right):
+            return 1
+
+        count = 0
+        depth = 0
+        node = root
+        while(node.left):
+            depth += 1
+            node = node.left
+        #print(depth)
+
+        left, right = 0, 2**depth - 1
+        while(left < right):
+            #print(left, right)
+            mid = (left + right + 1) // 2
+            if(self.exist(root, depth, mid)):
+                left = mid
+            else:
+                right = mid -1
+
+        return 2**depth -1 + left + 1
+
+    def exist(self, root: Optional[TreeNode], depth: int, k: int) -> bool:
+        bits = 1 << (depth - 1)
+        #print('k: ',k)
+        node = root
+        while node and bits > 0:
+            #print('bits: ',bits, node.val)
+            if bits & k == 0:
+                node = node.left
+            else:
+                node = node.right
+            bits >>= 1
+        return node is not None
+
