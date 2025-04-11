@@ -1,0 +1,27 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def getMinimumDifference(self, root: Optional[TreeNode]) -> int:
+        self.ans = float('inf')
+        self.pre = -1
+        self.dfs(root, self.pre, self.ans)
+        return self.ans
+    
+    def dfs(self, root: Optional[TreeNode], pre: int, ans: int) -> None: #二叉搜索树中序遍历得到的值序列是递增有序的
+        if(not root):
+            return
+
+        self.dfs(root.left, self.pre, self.ans)
+        if(self.pre == -1):
+            self.pre = root.val
+
+        else:
+            self.ans = min(self.ans, root.val - self.pre)
+            self.pre = root.val
+        
+        self.dfs(root.right, self.pre, self.ans)
+
