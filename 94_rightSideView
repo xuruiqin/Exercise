@@ -9,7 +9,7 @@ class Solution:
         right_value_at_depth = dict()
         height = -1
 
-        stack = [[root,0]]
+        stack = [(root,0)]
         while(stack):
             node, depth = stack.pop()
 
@@ -18,8 +18,35 @@ class Solution:
 
                 right_value_at_depth.setdefault(depth, node.val) #不存在depth时，插入map
 
-                stack.append([node.left, depth + 1])
-                stack.append([node.right, depth + 1])
+                stack.append((node.left, depth + 1))
+                stack.append((node.right, depth + 1))
+
+
+        return [right_value_at_depth[depth] for depth in range(height + 1)]
+
+#广度优先搜索
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        right_value_at_depth = dict()
+        height = -1
+
+        que = deque([(root,0)])
+        while(que):
+            node, depth = que.popleft()
+
+            if(node):
+                height = max(height, depth)
+
+                right_value_at_depth[depth] = node.val #每一层最后一个节点才是想要的信息
+
+                que.append((node.left, depth + 1))
+                que.append((node.right, depth + 1))
 
 
         return [right_value_at_depth[depth] for depth in range(height + 1)]
