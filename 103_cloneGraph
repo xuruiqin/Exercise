@@ -28,3 +28,38 @@ class Solution:
 
         return clone_node
         
+#方法二
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+
+from typing import Optional
+class Solution:
+    #def __init__(self):
+    #    self.visited = {}
+
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        if(not node):
+            return node
+
+        visited = {}
+        que = collections.deque()
+        clone_node = Node(node.val, [])
+        que.append(node)
+        visited[node] = clone_node
+
+        while(que):
+            n = que.popleft()
+            for neighbor in n.neighbors:
+                if(neighbor not in visited.keys()):
+                    visited[neighbor] = Node(neighbor.val, [])
+                    que.append(neighbor)
+
+                visited[n].neighbors.append(visited[neighbor])
+
+        return clone_node
+        
