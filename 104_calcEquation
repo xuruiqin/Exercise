@@ -100,21 +100,24 @@ class Solution:
                 graph[y][x] = 1/v
             else:
                 graph[y] = {x: 1/v}
+        print(graph)
         # dfs找寻从s到t的路径并返回结果叠乘后的边权重即结果
-        def dfs(s, t) -> int:
+        def dfs(s, t) -> int: #dfs(a,c) ##dfs(b,c) ###dfs(a,c)
+            print(s, t, visited)
             if s not in graph:
                 return -1
             if t == s:
                 return 1
-            for node in graph[s].keys():
+            for node in graph[s].keys(): #node in ["b"] ##node in ["a"√, "c"] ###node in ["b"]##node in ["a", "c"√]
                 if node == t:
-                    return graph[s][node]
-                elif node not in visited:
-                    visited.add(node)  # 添加到已访问避免重复遍历
-                    
-                    v = dfs(node, t)
+                    return graph[s][node] ##return graph[b][c] 3.0
+                elif node not in visited: 
+                    visited.add(node)  # 添加到已访问避免重复遍历 visited = {"b"} ##visited = {"b", "a"} ###__
+                    #print(s, t, node, visited)
+                    v = dfs(node, t) #dfs(b ,c) ##dfs(a,c)
                     if v != -1:
-                        return graph[s][node]*v
+                        print('##########')
+                        return graph[s][node]*v #grah["a"]["b"]*3.0 = 2.0*3.0
             return -1
 
         # 逐个计算query的值
@@ -123,6 +126,11 @@ class Solution:
             visited = set()
             res.append(dfs(qs, qt))
         return res
+
+    #equations = [["a","b"],["b","c"]]
+    #values = [2.0, 3.0]
+    #[["a","c"]]
+
 
         # 返回所有查询的结果列表
         return ret
