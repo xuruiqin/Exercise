@@ -1,0 +1,90 @@
+from typing import List
+
+class Solution:
+    # 查找元素 x 的根节点，并进行路径压缩，同时更新权重
+    def findf(self, f: List[int], w: List[float], x: int) -> int:
+        # 如果当前节点 x 不是根节点
+        if f[x] != x:
+            # 递归查找其父节点的根节点
+            father = self.findf(f, w, f[x])
+            # 更新当前节点 x 到根节点的权重
+            w[x] = w[x] * w[f[x]]
+            # 将当前节点 x 的父节点直接设为根节点，实现路径压缩
+            f[x] = father
+        # 返回根节点
+        return f[x]
+
+    # 合并两个元素所在的集合，并更新权重
+    def merge(self, f: List[int], w: List[float], x: int, y: int, val: float) -> None:
+        # 查找 x 所在集合的根节点
+        fx = self.findf(f, w, x)
+        # 查找 y 所在集合的根节点
+        fy = self.findf(f, w, y)
+        # 将 x 所在集合的根节点的父节点设为 y 所在集合的根节点
+        f[fx] = fy
+        # 更新 fx 到 fy 的权重
+        w[fx] = val * w[y] / w[x]
+
+    # 计算给定方程式的结果
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        # 记录不同变量的数量
+        nvars = 0
+        # 用于存储变量到其索引的映射
+        variables = {}
+
+        # 获取方程式的数量
+        n = len(equations)
+        # 遍历所有方程式
+        for i in range(n):
+            # 如果方程式左边的变量不在变量映射中
+            if equations[i][0] not in variables:
+                # 为该变量分配一个索引
+                variables[equations[i][0]] = nvars
+                # 变量数量加 1
+                nvars += 1
+            # 如果方程式右边的变量不在变量映射中
+            if equations[i][1] not in variables:
+                # 为该变量分配一个索引
+                variables[equations[i][1]] = nvars
+                # 变量数量加 1
+                nvars += 1
+
+        # 初始化并查集的父节点列表，每个元素的父节点初始为自身
+        f = list(range(nvars))
+        # 初始化权重列表，每个元素的权重初始为 1.0
+        w = [1.0] * nvars
+
+        # 遍历所有方程式
+        for i in range(n):
+            # 获取方程式左边变量的索引
+            va = variables[equations[i][0]]
+            # 获取方程式右边变量的索引
+            vb = variables[equations[i][1]]
+            # 合并两个变量所在的集合，并更新权重
+            self.merge(f, w, va, vb, values[i])
+
+        # 用于存储每个查询的结果
+        ret = []
+        # 遍历所有查询
+        for q in queries:
+            # 初始化查询结果为 -1.0，表示无法计算
+            result = -1.0
+            # 如果查询的两个变量都在变量映射中
+            if q[0] in variables and q[1] in variables:
+                # 获取查询的第一个变量的索引
+                ia = variables[q[0]]
+                # 获取查询的第二个变量的索引
+                ib = variables[q[1]]
+                # 查找第一个变量所在集合的根节点
+                fa = self.findf(f, w, ia)
+                # 查找第二个变量所在集合的根节点
+                fb = self.findf(f, w, ib)
+                # 如果两个变量在同一个集合中
+                if fa == fb:
+                    # 计算查询结果
+                    result = w[ia] / w[ib]
+            # 将查询结果添加到结果列表中
+            ret.append(result)
+
+        # 返回所有查询的结果列表
+        return ret
