@@ -1,0 +1,31 @@
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        edges = collections.defaultdict(list)
+        visited = [0]*numCourses #存储课程的访问状态
+        #result = list()
+
+        valid = True #随时更新判断
+
+        for info in prerequisites:
+            edges[info[1]].append(info[0]) #将前序课程转换成字典
+
+        def dfs(u: int) -> None: #深度搜索，判断每个课程
+            nonlocal valid
+            visited[u] = 1 #当前课程u访问状态改为1
+            for v in edges[u]: #对于课程u的所有前置课程，进行处理
+                if(visited[v] == 0): #课程v未被访问，则进入深度搜索
+                    dfs(v)
+                    if(not valid): #判据为否，跳出循环
+                        return
+                elif(visited[v] == 1): #课程v正在被访问, 说明有向图循环，判据为否，跳出循环
+                    valid = False
+                    return
+
+            visited[u] = 2 #课程u及其前置课程都被访问，u的状态置为2
+            #result.append(u)
+
+        for i in range(numCourses): #对所有课程进行处理
+            if(valid and not visited[i]): #如果valid为True并且课程i未被访问
+                dfs(i) #处理课程i
+
+        return valid
