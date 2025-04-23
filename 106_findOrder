@@ -32,3 +32,32 @@ class Solution:
             return result[::-1]
         else:
             return []
+
+#方法二 BFS
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        edges = collections.defaultdict(list)
+        degree = [0]*numCourses
+        results = list()
+        visited =0
+
+        for info in prerequisites:
+            edges[info[1]].append(info[0])
+            degree[info[0]] += 1
+
+        q = collections.deque([i for i in range(numCourses) if degree[i] == 0])
+        #print(q)
+
+        while(q):
+            u = q.popleft()
+            visited += 1
+            results.append(u)
+            for v in edges[u]:
+                degree[v] -= 1
+                if(degree[v] == 0):
+                    q.append(v)
+
+        if(numCourses == visited):
+            return results
+        else:
+            return [] 
