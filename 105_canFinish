@@ -29,3 +29,26 @@ class Solution:
                 dfs(i) #处理课程i
 
         return valid
+
+#方法二 广度优先
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        edges = collections.defaultdict(list)
+        indege = [0]*numCourses #存储课程的访问状态      
+
+        for info in prerequisites:
+            edges[info[1]].append(info[0]) #将课程对应的先修课映射关系转换成字典
+            indege[info[0]] += 1 #该先修课程对应的计数＋1，代表有多少课程需要该课程作为先修课
+
+        q = collections.deque([u for u in range(numCourses) if indege[u] == 0]) #不是先修课的课程入队列
+        visited = 0 #记录被访问课程次数
+
+        while(q):
+            visited += 1
+            u = q.popleft()
+            for v in edges[u]:
+                indege[v] -= 1
+                if(indege[v] == 0): #如果该先修课对应的后修课都被处理过，那么该先修课入队列
+                    q.append(v)
+
+        return visited == numCourses
