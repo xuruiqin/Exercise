@@ -21,3 +21,28 @@ class Solution:
             
         return -1
         
+#优化
+class Solution:
+    def minMutation(self, startGene: str, endGene: str, bank: List[str]) -> int:
+        if(len(startGene) != len(endGene)):
+            return -1
+        bank = set(bank)
+        if(endGene not in bank):
+            return -1
+
+        q = collections.deque([(startGene, 0)])
+        visited = set([startGene])
+        while(q):
+            cur, step = q.popleft()
+            if(cur == endGene):
+                return step
+
+            for idx, char in enumerate(cur):
+                for ch in "ACGT":
+                    if(ch != char):                  
+                        newGene = cur[:idx] + ch + cur[idx+1:]
+                        if(newGene in bank and newGene not in visited):
+                            bank.remove(newGene)
+                            q.append((newGene,step+1))
+            
+        return -1
