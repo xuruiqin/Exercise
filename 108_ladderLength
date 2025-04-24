@@ -1,0 +1,27 @@
+class Solution:
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        if(len(beginWord) != len(endWord)):
+            return 0
+        wordList = set(wordList)
+        if(endWord not in wordList):
+            return 0
+
+        letters = set(chr(i) for i in range(ord('a'), ord('z') + 1))
+
+        q = collections.deque([(beginWord, 0)])
+        visited = set()
+        while(q):
+            cur, step = q.popleft()
+            if(cur == endWord):
+                return step + 1
+            for idx, char in enumerate(cur):
+                for ch in letters:
+                    if(ch != char):
+                        newWord = cur[:idx] + ch + cur[idx+1:]
+                        if(newWord in wordList and newWord not in visited):
+                            q.append((newWord, step + 1))
+                            visited.add(newWord)
+                            wordList.remove(newWord)
+
+
+        return 0
