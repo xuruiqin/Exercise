@@ -1,0 +1,49 @@
+class Trie:
+    def __init__(self):
+        self.children = defaultdict(Trie)
+        self.word = ""
+
+    def insert(self, word):
+        node = self
+        for ch in word:
+            #ch = ord(ch) - ord("a")
+            node = node.children[ch]
+        node.is_word = True
+        node.word = word
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        trie = Trie() #创建字典树
+        for word in words:
+            trie.insert(word)
+
+        def dfs(cur: Trie, i: int, j: int) -> None:
+            if(board[i][j] not in cur.children): #如果board[i][j]字符不在当前字典树节点的子节点上，递归终止
+                return
+            
+            ch = board[i][j] 
+            nxt = cur.children[ch] #下一个节点
+            if(nxt.word != ""): #下一个节点的单词不为空，代表搜索到了一个字典树中存在的单词
+                ans.append(nxt.word) #将搜索到的单词添加到结果列表中
+                nxt.word = ""
+
+            if(nxt.children): #接着继续往下搜索，如果nxt节点存在子节点
+                board[i][j] = "#" #将搜索过的位置标记为"#"，因为在同一个单词中不能重复利用该位置
+                for ii, jj in [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]: #对board[i][j]周围上下左右的位置进行搜索
+                    if(0 <= ii < m and 0 <= jj < n):
+                        dfs(nxt, ii, jj)
+                board[i][j] = ch #将当前搜索过的位置重新变更为原先的ch
+
+            if(not nxt.children): #如果nxt节点不存在子节点
+                cur.children.pop(ch) #移除cur的子节点"ch"，避免重复查找单词
+
+        ans = []
+        m, n = len(board), len(board[0])
+
+        #以board中每个格点开始，搜索是否能串联出字典树中的某个单词
+        for i in range(m):
+            for j in range(n):
+                dfs(trie, i, j)
+        
+        return ans
+
