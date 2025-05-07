@@ -1,0 +1,39 @@
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        # 定义数字到字母的映射关系
+        phoneMap = {
+            '2': 'abc',
+            '3': 'def',
+            '4': 'ghi',
+            '5': 'jkl',
+            '6': 'mno',
+            '7': 'pqrs',
+            '8': 'tuv',
+            '9': 'wxyz'
+        }
+
+        def backTrack(idx: int):
+            # 当索引等于digits的长度时，表示已经处理完所有数字
+            if idx == len(digits):
+                # 将当前组合加入结果列表
+                ans.append("".join(combination))
+            else:
+                # 获取当前索引对应的数字
+                digit = digits[idx]
+                # 遍历该数字对应的所有可能字母
+                for letter in phoneMap[digit]:
+                    # 将当前字母加入组合
+                    combination.append(letter)
+                    # 递归处理下一个数字
+                    backTrack(idx + 1)
+                    # 回溯操作，移除最后添加的字母，尝试其他可能性
+                    combination.pop()
+
+        # 存储当前组合的列表
+        combination = list()
+        # 存储最终结果的列表
+        ans = list()
+        # 只有当输入的digits不为空时才进行回溯处理
+        if digits:
+            backTrack(0)
+        return ans
