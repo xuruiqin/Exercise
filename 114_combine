@@ -1,0 +1,17 @@
+class Solution:
+    def combine(self, n: int, k: int) -> List[List[int]]:
+        ans = []
+        def trace(idx: int, combination: List[int]):
+            #当组合长度达到k时，记录结果
+            if(len(combination) == k):
+                #print(combination)
+                ans.append(combination.copy())#为防止修改combination时也同时会修改掉ans中的结果，这里利用深拷贝
+
+            else:
+                for i in range(idx,n + 1): #从idx开始选元素，避免重复
+                    combination.append(i)
+                    trace(i + 1, combination) #递归选择下一个元素
+                    combination.pop() #回溯
+                    
+        trace(1, [])
+        return ans
