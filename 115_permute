@@ -1,0 +1,33 @@
+from typing import List
+
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        ans = []
+        n = len(nums)
+        
+        def backtrack(path: List[int], used: List[bool]):
+            # 当路径长度等于原数组长度时，说明已经生成了一个完整的排列
+            if len(path) == n:
+                ans.append(path.copy())
+                return
+            
+            for i in range(n):
+                # 跳过已经在当前路径中使用过的元素
+                if used[i]:
+                    continue
+                
+                # 选择当前元素
+                used[i] = True
+                path.append(nums[i])
+                
+                # 递归生成剩余元素的排列
+                backtrack(path, used)
+                
+                # 回溯：撤销选择
+                used[i] = False
+                path.pop()
+        
+        # 记录元素是否已经被使用
+        used = [False] * n
+        backtrack([], used)
+        return ans
