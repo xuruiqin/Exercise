@@ -1,0 +1,27 @@
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        ans = []
+        n = len(candidates)
+        
+        def track(start:int, curSum:int, combination: List[int]):
+            if(curSum == target):
+                ans.append(combination.copy())
+                return
+
+            elif(curSum < target):
+                for i in range(start, n):
+                    curSum = curSum + candidates[i]
+                    combination.append(candidates[i])
+                    track(i, curSum, combination)
+                    curSum = curSum - candidates[i]
+                    combination.pop()
+
+            else:
+                return
+                #curSum = curSum - combination[-1]
+                #combination.pop()
+                #track(curSum, combination)
+
+
+        track(0,0,[])
+        return ans    
