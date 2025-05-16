@@ -1,0 +1,33 @@
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        ans = []
+        #count1 = 0
+        #count2 = 0
+
+        def trackback(combination: List[str], count1: int, count2: int):
+            if(len(combination) == 2*n):
+                ans.append(''.join(combination))
+                return
+
+            else:
+                if(count1 < n):
+                    #count1 += 1
+                    combination.append('(')
+                    trackback(combination, 1 + count1, count2)
+                    #count1 -= 1
+                    combination.pop()
+                if(count2 < count1):
+                    #count2 += 1
+                    combination.append(')')
+                    trackback(combination, count1, 1 + count2)
+                    #count2 -= 1
+                    combination.pop()
+        
+        trackback([], 0, 0)
+        return ans
+
+                
+            
+
+
+        return ans
