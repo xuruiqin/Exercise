@@ -22,3 +22,42 @@ class Solution:
         diagonal1 = set()
         diagonal2 = set()
         return backtrack(0)
+
+##########################
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        ans = []
+        def trans(combination: List[int]) -> List[str]:
+            res = []
+            for col in combination:
+                row_str = ['.']*n
+                row_str[col] = 'Q'
+                res.append(''.join(row_str))
+            return  res
+
+        
+        def trackback(row: int, combination: List[int]) -> None:
+            if(row == n):
+                ans.append(combination.copy())
+
+            else:
+                for i in range(n):
+                    if(i in columns or row - i in diagonal1 or row + i in diagonal2):
+                        continue
+                    columns.add(i)
+                    diagonal1.add(row - i)
+                    diagonal2.add(row + i)
+                    combination.append(i)
+                    trackback(row + 1, combination)
+                    columns.remove(i)
+                    diagonal1.remove(row - i)
+                    diagonal2.remove(row + i)
+                    combination.pop()
+
+        columns = set()
+        diagonal1 = set()
+        diagonal2 = set()
+
+        trackback(0, [])
+
+        return [trans(combination) for combination in ans]
